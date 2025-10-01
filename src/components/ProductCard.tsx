@@ -1,14 +1,15 @@
 import { Plus, Info } from 'lucide-react';
-import { Product } from '../lib/supabase';
+import { Product } from '../data/menuData';
 
 interface ProductCardProps {
   product: Product;
   onAdd: () => void;
   onShowInfo: () => void;
+  showInfoButton?: boolean;
 }
 
-export function ProductCard({ product, onAdd, onShowInfo }: ProductCardProps) {
-  const hasInfo = product.ingredients || product.allergens;
+export function ProductCard({ product, onAdd, onShowInfo, showInfoButton = true }: ProductCardProps) {
+  const hasInfo = showInfoButton && (product.ingredients || product.allergens);
 
   return (
     <div className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 transform hover:-translate-y-2 border border-gray-700 hover:border-orange-500/50">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Plus, Minus } from 'lucide-react';
-import { Product, ProductOption, CartItem, supabase } from '../lib/supabase';
+import { Product, ProductOption, CartItem, productOptions } from '../data/menuData';
 
 interface TacosBuilderProps {
   product: Product;
@@ -22,25 +22,12 @@ export function TacosBuilder({ product, onClose, onAddToCart }: TacosBuilderProp
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    loadOptions();
+    const options = productOptions.filter(o => o.product_id === product.id);
+    setSizes(options.filter((o) => o.option_type === 'size'));
+    setMeats(options.filter((o) => o.option_type === 'meat'));
+    setSauces(options.filter((o) => o.option_type === 'sauce'));
+    setSupplements(options.filter((o) => o.option_type === 'supplement'));
   }, [product.id]);
-
-  const loadOptions = async () => {
-    const { data, error } = await supabase
-      .from('product_options')
-      .select('*')
-      .eq('product_id', product.id);
-
-    if (error) {
-      console.error('Error loading options:', error);
-      return;
-    }
-
-    setSizes(data.filter((o) => o.option_type === 'size'));
-    setMeats(data.filter((o) => o.option_type === 'meat'));
-    setSauces(data.filter((o) => o.option_type === 'sauce'));
-    setSupplements(data.filter((o) => o.option_type === 'supplement'));
-  };
 
   const getMaxMeats = () => {
     if (!selectedSize) return 0;

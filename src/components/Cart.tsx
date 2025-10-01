@@ -1,6 +1,6 @@
 import { X, Plus, Minus, Trash2, ShoppingBag, Phone, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
-import { CartItem } from '../lib/supabase';
+import { CartItem } from '../data/menuData';
 
 interface CartProps {
   cart: CartItem[];

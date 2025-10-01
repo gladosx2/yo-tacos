@@ -1,5 +1,5 @@
 import { X, AlertTriangle, Package } from 'lucide-react';
-import { Product } from '../lib/supabase';
+import { Product } from '../data/menuData';
 
 interface ProductInfoModalProps {
   product: Product;
