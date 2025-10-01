@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Category, Product, supabase, CartItem } from '../lib/supabase';
+import { useState } from 'react';
+import { Category, Product, CartItem, categories, products } from '../lib/data';
 import { ProductCard } from './ProductCard';
 import { TacosBuilder } from './TacosBuilder';
 import { ProductInfoModal } from './ProductInfoModal';
@@ -9,48 +9,16 @@ interface MenuSectionProps {
 }
 
 export function MenuSection({ onAddToCart }: MenuSectionProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Record<string, Product[]>>({});
-  const [loading, setLoading] = useState(true);
   const [selectedTacosProduct, setSelectedTacosProduct] = useState<Product | null>(null);
   const [selectedInfoProduct, setSelectedInfoProduct] = useState<Product | null>(null);
 
-  useEffect(() => {
-    loadMenu();
-  }, []);
-
-  const loadMenu = async () => {
-    try {
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('categories')
-        .select('*')
-        .order('display_order');
-
-      if (categoriesError) throw categoriesError;
-
-      const { data: productsData, error: productsError } = await supabase
-        .from('products')
-        .select('*')
-        .eq('available', true);
-
-      if (productsError) throw productsError;
-
-      const productsByCategory: Record<string, Product[]> = {};
-      productsData.forEach((product) => {
-        if (!productsByCategory[product.category_id]) {
-          productsByCategory[product.category_id] = [];
-        }
-        productsByCategory[product.category_id].push(product);
-      });
-
-      setCategories(categoriesData || []);
-      setProducts(productsByCategory);
-    } catch (error) {
-      console.error('Error loading menu:', error);
-    } finally {
-      setLoading(false);
+  const productsByCategory: Record<string, Product[]> = {};
+  products.forEach((product) => {
+    if (!productsByCategory[product.category_id]) {
+      productsByCategory[product.category_id] = [];
     }
-  };
+    productsByCategory[product.category_id].push(product);
+  });
 
   const handleAddProduct = (product: Product) => {
     if (product.name === 'Tacos Personnalisé') {
@@ -67,19 +35,11 @@ export function MenuSection({ onAddToCart }: MenuSectionProps) {
     onAddToCart(cartItem);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-900 py-24 px-4">
       <div className="max-w-7xl mx-auto">
         {categories.map((category) => {
-          const categoryProducts = products[category.id] || [];
+          const categoryProducts = productsByCategory[category.id] || [];
           if (categoryProducts.length === 0) return null;
 
           return (

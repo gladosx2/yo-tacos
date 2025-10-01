@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Plus, Minus } from 'lucide-react';
-import { Product, ProductOption, CartItem, supabase } from '../lib/supabase';
+import { Product, ProductOption, CartItem, productOptions } from '../lib/data';
 
 interface TacosBuilderProps {
   product: Product;
@@ -21,33 +21,22 @@ export function TacosBuilder({ product, onClose, onAddToCart }: TacosBuilderProp
   const [addMenu, setAddMenu] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    loadOptions();
+    const options = productOptions.filter((o) => o.product_id === product.id);
+    setSizes(options.filter((o) => o.option_type === 'size'));
+    setMeats(options.filter((o) => o.option_type === 'meat'));
+    setSauces(options.filter((o) => o.option_type === 'sauce'));
+    setSupplements(options.filter((o) => o.option_type === 'supplement'));
   }, [product.id]);
-
-  const loadOptions = async () => {
-    const { data, error } = await supabase
-      .from('product_options')
-      .select('*')
-      .eq('product_id', product.id);
-
-    if (error) {
-      console.error('Error loading options:', error);
-      return;
-    }
-
-    setSizes(data.filter((o) => o.option_type === 'size'));
-    setMeats(data.filter((o) => o.option_type === 'meat'));
-    setSauces(data.filter((o) => o.option_type === 'sauce'));
-    setSupplements(data.filter((o) => o.option_type === 'supplement'));
-  };
 
   const getMaxMeats = () => {
     if (!selectedSize) return 0;
-    if (selectedSize.name.includes('M (1')) return 1;
-    if (selectedSize.name.includes('L (2')) return 2;
-    if (selectedSize.name.includes('XL (3')) return 3;
-    if (selectedSize.name.includes('XXL (4')) return 4;
+    if (selectedSize.name.includes('S (1')) return 1;
+    if (selectedSize.name.includes('M (2')) return 2;
+    if (selectedSize.name.includes('L (3')) return 3;
+    if (selectedSize.name.includes('XL (4')) return 4;
     return 0;
   };
 
@@ -121,8 +110,18 @@ export function TacosBuilder({ product, onClose, onAddToCart }: TacosBuilderProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-orange-500/30">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div
+        ref={modalRef}
+        className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-orange-500/30"
+      >
         <div className="sticky top-0 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-orange-500/30 p-6 flex items-center justify-between z-10">
           <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">
             Compose Ton Tacos

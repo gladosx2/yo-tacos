@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CartItem } from '../lib/supabase';
+import { CartItem } from '../lib/data';
 
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);

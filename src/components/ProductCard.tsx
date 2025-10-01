@@ -1,5 +1,5 @@
 import { Plus, Info } from 'lucide-react';
-import { Product } from '../lib/supabase';
+import { Product } from '../lib/data';
 
 interface ProductCardProps {
   product: Product;
