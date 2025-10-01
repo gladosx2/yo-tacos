@@ -15,6 +15,7 @@ export function Header({ onCartClick, cartItemCount, onNavigate }: HeaderProps) 
     { id: 'student', label: 'Menu Étudiant' },
     { id: 'tacos', label: 'Tacos' },
     { id: 'sides', label: 'Accompagnements' },
+    { id: 'buckets', label: 'Buckets' },
     { id: 'drinks', label: 'Boissons & Desserts' },
   ];
 

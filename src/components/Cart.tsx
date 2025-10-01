@@ -50,8 +50,14 @@ export function Cart({ cart, onClose, onUpdateQuantity, onRemove, totalAmount }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border-t sm:border border-orange-500/30">
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border-t sm:border border-orange-500/30"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 border-b border-orange-500/30 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">
             Panier ({cart.length})

@@ -19,7 +19,8 @@ function App() {
       student: 'menu-étudiant',
       tacos: 'tacos',
       sides: 'accompagnements',
-      drinks: 'boissons',
+      buckets: 'buckets',
+      drinks: 'boissons-&-desserts',
     };
 
     const targetId = sectionMap[sectionId];
